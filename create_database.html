@@ -1,0 +1,70 @@
+<!doctype html>
+<html>
+<head>
+<script src='http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js'></script>
+<script>
+var db;
+$(document).ready(function(){
+$('#db_button').click(function(){
+ db = openDatabase('htm5dbs',"8.0",'test db html5',200000);
+alert('Your db  created with html5dbs');
+});
+
+$('#db_table').click(function(){
+db = openDatabase('htm5dbs',"8.0",'test db html5',200000);
+db.transaction(function(t){
+t.executeSql('CREATE TABLE IF NOT EXISTS UserInfo(ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,fname TEXT,lname TEXT)',[],alert('UserInfo Table created successfully'),handleError);
+});
+
+});
+function CreateTable(){
+db.transaction(function(t){
+t.executeSql('CREATE TABLE IF NOT EXISTS UserInfo(ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,fname TEXT,lname TEXT)',[],alert('Table created with as UserInfo'),handleError);
+});
+}
+
+
+$('#db_show').click(function(){
+db = openDatabase('htm5dbs',"8.0",'test db html5',200000);
+db.transaction(function(t){
+t.executeSql('SELECT * FROM UserInfo',[],function(t,results){
+var len = results.rows.length;
+var last_row = results.rows.item(len -1);
+alert('last record in you entered ' + last_row.fname + ' id ' + last_row.ID );
+});
+});
+});
+
+$('#insert_button').click(function(){
+db = openDatabase('htm5dbs',"8.0",'test db html5',200000);
+var fname = $('#fname').val();
+var lnaame = $('#lname').val();
+db.transaction(function(t){
+t.executeSql('INSERT INTO UserInfo(fname,lname) VALUES(?,?)',[fname,lname],alert('Inserted your record successfully'),handleError);
+});
+
+});
+
+
+function handleError(e){
+alert('ERROR while Table' + e);
+}
+
+});
+
+</script>
+</head>
+<body>
+On click creates a db in browser
+<br/>
+use f12 to see the your database has created or not in resource folder of your browser
+<br/>
+<input type="button" id="db_button" value="Create DataBase"></input>
+<input type="button" id="db_table" value="Create Table"></input>
+<br/>
+fname<input type='text' id='fname' /></br>
+lname<input type='text' id='lname' /></br>
+<input type="button" id="insert_button" value="Insert values"></input></br>
+<input type='button' id='db_show' value='show last record'/>
+</body>
+</html>
